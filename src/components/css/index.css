@@ -7,10 +7,11 @@ body {
     margin:2rem;
     display: flex;
     flex-wrap: wrap;
+    background-color: #00004b;
+    color: #ff6600;
+    font-weight: 400;
+    font-size: 2vh;
 }
 
-code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
+
 

@@ -4,12 +4,16 @@ const BillSplitter = () => {
     const [bill, setBill] = useState('')
     const [tipPercentage, setTipPercentage] = useState(0)
     const [numOfPeople, setNumOfPeople] = useState('')
+    const [view, setView] = useState('enterValues')
 
     function reset(){
         setBill('0')
         setTipPercentage(0)
         setNumOfPeople(0)
+        setView('enterValues')
     }
+
+    if (view === 'enterValues') {
     return (
     <>
         <div>
@@ -34,11 +38,30 @@ const BillSplitter = () => {
         <input name="numOfPeople" value={numOfPeople} onChange={e => setNumOfPeople(e.target.value)}/>
     </div>
         <div>
-        <p>Tip per Person £{numOfPeople > 0 ? (((bill * tipPercentage)*100)/(numOfPeople * 10000)).toFixed(2) : '0'}</p>
-        <p>Total per Person £{numOfPeople > 0 ? ((bill * 100 * (100+(tipPercentage)))/(numOfPeople * 10000)).toFixed(2) : '0'}</p>
-        <button onClick={() => reset()}>Reset</button>
+        <button onClick={() => setView('showCalculation')}>Calculate!</button>
     </div>
-    </>)
+    </>
+    )} else if (view === "showCalculation")
+    {
+    return (
+        <>
+            <div>
+                <p>Tip per Person £{numOfPeople > 0 ? (((bill * tipPercentage)*100)/(numOfPeople * 10000)).toFixed(2) : '0'}</p>
+                <p>Total per Person £{numOfPeople > 0 ? ((bill * 100 * (100+(tipPercentage)))/(numOfPeople * 10000)).toFixed(2) : '0'}</p>
+                <button onClick={() => reset()}>Reset</button>
+            </div>
+        </>
+    )}
+    {
+        return (
+            <>
+                <div>
+                    <p>Something has gone wrong!</p>
+                    <button onClick={() => reset()}>Reset</button>
+                </div>
+            </>
+        )
+    }
 }
 
 export default BillSplitter
