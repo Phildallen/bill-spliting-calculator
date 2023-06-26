@@ -1,7 +1,6 @@
 import {useState} from "react";
 import {NumericFormat} from 'react-number-format';
 
-
 const BillSplitter = () => {
     const [bill, setBill] = useState('')
     const [tipPercentage, setTipPercentage] = useState(0)
@@ -15,7 +14,7 @@ const BillSplitter = () => {
         setView('enterValues')
     }
 
-    const handleChange = (e) => {
+    const handleBillChange = (e) => {
         const {value} = e.target;
         if (+value > 0) {
             if (value.match(/\./g)) {
@@ -30,6 +29,24 @@ const BillSplitter = () => {
         }
     }
 
+    const handleTipDeduction = (e) => {
+        if (tipPercentage > 0) {
+            setTipPercentage(tipPercentage -1)
+        }
+        if (tipPercentage <= 0) {
+            setTipPercentage(0)
+        }
+    }
+
+    const handlePeopleDeduction = (e) => {
+        if (numOfPeople > 2) {
+            setNumOfPeople(numOfPeople -1)
+        }
+        if (numOfPeople <= 2) {
+            setNumOfPeople(2)
+        }
+    }
+
 
     if (view === 'enterValues') {
         return (
@@ -39,33 +56,39 @@ const BillSplitter = () => {
 
                     <div className="billTotal">
                         <p>Bill Total</p>
-                        <p onChange={handleChange} className="bill">
+                        <p onChange={handleBillChange} className="bill">
                             <NumericFormat value={bill} decimalScale={2} fixedDecimalScale allowNegative={false}/>
                         </p>
                     </div>
                     <p>Tip</p>
-                    <div>
+                    <div className="tipButtons">
                         <button className="tipButton" onClick={() => setTipPercentage(0)}>0%</button>
                         <button className="tipButton" onClick={() => setTipPercentage(5)}>5%</button>
                         <button className="tipButton" onClick={() => setTipPercentage(10)}>10%</button>
+                    </div>
+                    <div className="tipButtons">
                         <button className="tipButton" onClick={() => setTipPercentage(15)}>15%</button>
                         <button className="tipButton" onClick={() => setTipPercentage(20)}>20%</button>
                         <button className="tipButton" onClick={() => setTipPercentage(25)}>25%</button>
                     </div>
-                    <input
-                        name="tipPercent"
-                        value={tipPercentage}
-                        onChange={e => setTipPercentage(e.target.value)}
-                    />
+                    <div className="adjNumber">
+                    <button className="plusMinusButton" onClick={handleTipDeduction}> - </button>
+                    <span className="displayNumber"><span>{tipPercentage}%</span></span>
+                    <button className="plusMinusButton" onClick={() => setTipPercentage(tipPercentage+1)}> + </button>
+                </div>
 
-                    <p>Number of People</p>
-                    <input name="numOfPeople" value={numOfPeople} onChange={e => setNumOfPeople(e.target.value)}/>
-                </div>
+                    <div>
+                    <p>People</p>
+                    <div className="adjNumber">
+                    <button className="plusMinusButton" onClick={handlePeopleDeduction}> - </button>
+                    <span className="displayNumber"><span>{numOfPeople}</span></span>
+                    <button className="plusMinusButton" onClick={() => setNumOfPeople(numOfPeople+1)}> + </button>
+                    </div>
+                    </div>
+            </div>
                 <div>
-                    <button onClick={() => setView('showCalculation')}>Calculate!</button>
-                </div>
-                <div>
-                    <button onClick={() => reset()}>Reset</button>
+                    <button className="calculate" onClick={() => setView('showCalculation')}>Calculate!</button>
+                                    <button onClick={() => reset()}>Reset</button>
                 </div>
             </>
         )
