@@ -5,13 +5,29 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     margin:2rem;
-    display: flex;
-    flex-wrap: wrap;
     background-color: #00004b;
-    color: #ff6600;
+    color: #ffffff;
     font-weight: 400;
-    font-size: 2vh;
+    font-size: 3vh;
 }
 
+input{
+    border-style: solid;
+    border-radius: 2vh;
+    max-width: 60vw;
+    background-color: #00004b;
+    color: #ffffff;
+    font-family: 'Sulphur Point', sans-serif;
+    font-weight: 400;
+    font-size: 4vh;
+    align-self: center;
+    text-align: center;
+}
 
-
+.content {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+}
