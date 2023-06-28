@@ -5,6 +5,7 @@ const BillSplitter = () => {
     const [bill, setBill] = useState('')
     const [tipPercentage, setTipPercentage] = useState(0)
     const [numOfPeople, setNumOfPeople] = useState(2)
+    const [currency, setCurrency] = useState("£")
     const [view, setView] = useState('enterValues')
 
     function reset() {
@@ -56,9 +57,21 @@ const BillSplitter = () => {
 
                     <div className="billTotal">
                         <p>Bill Total</p>
-                        <p onChange={handleBillChange} className="bill">
+                        <div className="bill">
+                        <select onChange={e => setCurrency(e.target.value) } name="currency" className="currency">
+                            <option value="" selected disabled hidden>{currency}</option>
+                            <option value="£">£</option>
+                            <option value="€">€</option>
+                            <option value="$">$</option>
+                            <option value="CHF">F</option>
+                            <option value="Kč ">Kč</option>
+                            <option value="kr.">kr.</option>
+                            <option value="zł.">zł.</option>
+                        </select>
+                        <p onChange={handleBillChange}>
                             <NumericFormat value={bill} decimalScale={2} fixedDecimalScale allowNegative={false}/>
                         </p>
+                    </div>
                     </div>
                     <p>Tip</p>
                     <div className="tipButtons">
@@ -85,22 +98,24 @@ const BillSplitter = () => {
                     <button className="plusMinusButton" onClick={() => setNumOfPeople(numOfPeople+1)}> + </button>
                     </div>
                     </div>
-            </div>
-                <div>
+
+                <div className="bottomButtons">
                     <button className="calculate" onClick={() => setView('showCalculation')}>Calculate!</button>
-                                    <button onClick={() => reset()}>Reset</button>
+                                    <button className="reset" onClick={() => reset()}>Reset</button>
                 </div>
+
+            </div>
             </>
         )
     } else if (view === "showCalculation") {
         return (
             <>
                 <div>
+                    <p>Per Person</p>
+<p>{currency}{numOfPeople > 0 ? ((bill * 100 * (100 + (tipPercentage))) / (numOfPeople * 10000)).toFixed(2) : '0'}</p>
                     <p>Tip per Person
                         £{numOfPeople > 0 ? (((bill * tipPercentage) * 100) / (numOfPeople * 10000)).toFixed(2) : '0'}</p>
-                    <p>Total per Person
-                        £{numOfPeople > 0 ? ((bill * 100 * (100 + (tipPercentage))) / (numOfPeople * 10000)).toFixed(2) : '0'}</p>
-                    <button onClick={() => reset()}>Reset</button>
+                    <button className="reset" onClick={() => reset()}>Reset</button>
                 </div>
             </>
         )

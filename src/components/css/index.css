@@ -6,8 +6,6 @@
 }
 
 body {
-    /*-webkit-font-smoothing: antialiased;*/
-    /*-moz-osx-font-smoothing: grayscale;*/
     margin:2rem;
     background-color: #00004b;
     color: #ffffff;
@@ -15,10 +13,31 @@ body {
     font-size: 3vh;
 }
 
+.bill {
+    display: flex;
+    gap: 2vw;
+}
+
+input, .currency {
+    border-style: solid;
+    border-radius: 2vh;
+    max-height: 6vh;
+    background-color: #00004b;
+    color: #ffffff;
+    font-weight: 400;
+    font-size: 4vh;
+    align-self: center;
+    text-align: center;
+}
+
+.currency {
+    max-width: 15vw;
+}
+
 input{
     border-style: solid;
     border-radius: 2vh;
-    max-width: 60vw;
+    max-width: 45vw;
     background-color: #00004b;
     color: #ffffff;
     font-weight: 400;
@@ -31,8 +50,9 @@ input{
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-around;
     text-align: center;
+    align-content: space-around;
 }
 
 .tipButton {
@@ -56,38 +76,58 @@ input{
     display: flex;
     justify-content: space-around;
     align-items: center;
-    /*border-style: solid;*/
-    /*border-color: #ffffff;*/
-    /*background-color: #00004b;*/
-
 }
-.plusMinusButton {
+
+.plusMinusButton, .displayNumber {
     border-style: solid;
     border-width: medium;
+    height: 5vh;
     border-color: #ffffff;
     background-color: #00004b;
     color: #ffffff;
-    font-size: 3vh;
-    height: 5vh;
-    width: 5vh;
     border-radius: 1vh;
+}
 
+.plusMinusButton {
+    font-size: 3vh;
+    width: 5vh;
 }
 
 .displayNumber {
-    height: 5vh;
     width: 30vw;
-    border-style: solid;
-    border-width: medium;
-    border-color: #ffffff;
-    background-color: #00004b;
-    color: #ffffff;
-    border-radius: 1vh;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.test {
+.bottomButtons {
+    padding-top: 3vh;
+    display: flex;
+    flex-direction: column;
+    gap: 3vh;
+}
+
+.calculate, .reset {
+    border-style: solid;
+    border-width: medium;
+    border-color: #ffffff;
+    border-radius: 1vh;
+}
+
+.calculate {
+    height: 5vh;
+    width: 40vw;
+    background-color: #ffffff;
+    color: #00004b;
+    font-size: 4vh;
+    align-self: center;
+}
+
+.reset {
+    height: 3vh;
+    width: 20vw;
+    background-color: #00004b;
     color: #ffffff;
+    font-size: 2vh;
+    align-self: flex-end;
 }
