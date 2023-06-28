@@ -15,6 +15,12 @@ const BillSplitter = () => {
         setView('enterValues')
     }
 
+    function calculate() {
+        if (bill > 0) {
+            setView('showCalculation')
+        }
+    }
+
     const handleBillChange = (e) => {
         const {value} = e.target;
         if (+value > 0) {
@@ -58,12 +64,12 @@ const BillSplitter = () => {
                     <div className="billTotal">
                         <p>Bill Total</p>
                         <div className="bill">
-                        <select onChange={e => setCurrency(e.target.value) } name="currency" className="currency">
+                        <select onChange={e => setCurrency(e.target.value) } name="currency" className={currency === 'CHF' ? "currency chf" : "currency"}>
                             <option value="" selected disabled hidden>{currency}</option>
                             <option value="£">£</option>
                             <option value="€">€</option>
                             <option value="$">$</option>
-                            <option value="CHF">F</option>
+                            <option value="CHF">CHF</option>
                             <option value="Kč ">Kč</option>
                             <option value="kr.">kr.</option>
                             <option value="zł.">zł.</option>
@@ -75,14 +81,14 @@ const BillSplitter = () => {
                     </div>
                     <p>Tip</p>
                     <div className="tipButtons">
-                        <button className="tipButton" onClick={() => setTipPercentage(0)}>0%</button>
-                        <button className="tipButton" onClick={() => setTipPercentage(5)}>5%</button>
-                        <button className="tipButton" onClick={() => setTipPercentage(10)}>10%</button>
+                        <button className={tipPercentage === 0 ? "tipSelected" : "tipButton"} onClick={() => setTipPercentage(0)}>0%</button>
+                        <button className={tipPercentage === 5 ? "tipSelected" : "tipButton"} onClick={() => setTipPercentage(5)}>5%</button>
+                        <button className={tipPercentage === 10 ? "tipSelected" : "tipButton"} onClick={() => setTipPercentage(10)}>10%</button>
                     </div>
                     <div className="tipButtons">
-                        <button className="tipButton" onClick={() => setTipPercentage(15)}>15%</button>
-                        <button className="tipButton" onClick={() => setTipPercentage(20)}>20%</button>
-                        <button className="tipButton" onClick={() => setTipPercentage(25)}>25%</button>
+                        <button className={tipPercentage === 15 ? "tipSelected" : "tipButton"} onClick={() => setTipPercentage(15)}>15%</button>
+                        <button className={tipPercentage === 20 ? "tipSelected" : "tipButton"} onClick={() => setTipPercentage(20)}>20%</button>
+                        <button className={tipPercentage === 25 ? "tipSelected" : "tipButton"} onClick={() => setTipPercentage(25)}>25%</button>
                     </div>
                     <div className="adjNumber">
                     <button className="plusMinusButton" onClick={handleTipDeduction}> - </button>
@@ -100,7 +106,7 @@ const BillSplitter = () => {
                     </div>
 
                 <div className="bottomButtons">
-                    <button className="calculate" onClick={() => setView('showCalculation')}>Calculate!</button>
+                    <button className={bill > 0 ? "calculate" : "inactiveCalc"} onClick={() => calculate()}>Calculate!</button>
                                     <button className="reset" onClick={() => reset()}>Reset</button>
                 </div>
 
@@ -110,13 +116,15 @@ const BillSplitter = () => {
     } else if (view === "showCalculation") {
         return (
             <>
+                <div className="content">
                 <div>
                     <p>Per Person</p>
-<p>{currency}{numOfPeople > 0 ? ((bill * 100 * (100 + (tipPercentage))) / (numOfPeople * 10000)).toFixed(2) : '0'}</p>
-                    <p>Tip per Person
-                        £{numOfPeople > 0 ? (((bill * tipPercentage) * 100) / (numOfPeople * 10000)).toFixed(2) : '0'}</p>
+<p className="calculation">{currency}{numOfPeople > 0 ? ((bill * 100 * (100 + (tipPercentage))) / (numOfPeople * 10000)).toFixed(2) : '0'}</p>
+                    <p>Tip per Person</p>
+                    <p className="calculation">{currency}{numOfPeople > 0 ? (((bill * tipPercentage) * 100) / (numOfPeople * 10000)).toFixed(2) : '0'}</p>
                     <button className="reset" onClick={() => reset()}>Reset</button>
                 </div>
+            </div>
             </>
         )
     }
