@@ -2,14 +2,16 @@ import {useState} from "react";
 import {NumericFormat} from 'react-number-format';
 
 const BillSplitter = () => {
-    const [bill, setBill] = useState('')
+    const [bill, setBill] = useState(null)
+    const [tip, setTip] = useState(0)
     const [tipPercentage, setTipPercentage] = useState(0)
     const [numOfPeople, setNumOfPeople] = useState(2)
     const [currency, setCurrency] = useState("£")
     const [view, setView] = useState('enterValues')
 
     function reset() {
-        setBill('')
+        setBill(null)
+        setTip(0)
         setTipPercentage(0)
         setNumOfPeople(2)
         setView('enterValues')
@@ -36,6 +38,11 @@ const BillSplitter = () => {
         }
     }
 
+    const calculateTip = () => {
+        const value = (bill*100*tipPercentage)/10000
+        setTip(value.toFixed(2))
+    }
+
     const handleTipDeduction = (e) => {
         if (tipPercentage > 0) {
             setTipPercentage(tipPercentage -1)
@@ -53,7 +60,6 @@ const BillSplitter = () => {
             setNumOfPeople(2)
         }
     }
-
 
     if (view === 'enterValues') {
         return (
@@ -106,7 +112,7 @@ const BillSplitter = () => {
                     </div>
 
                 <div className="bottomButtons">
-                    <button className={bill > 0 ? "calculate" : "inactiveCalc"} onClick={() => calculate()}>Calculate!</button>
+                    <button className={bill > 0 ? "calculate" : "inactiveCalc"} onClick={() => {calculate(); calculateTip()}}>Calculate!</button>
                                     <button className="reset" onClick={() => reset()}>Reset</button>
                 </div>
 
@@ -118,10 +124,17 @@ const BillSplitter = () => {
             <>
                 <div className="content">
                 <div>
-                    <p>Per Person</p>
-<p className="calculation">{currency}{numOfPeople > 0 ? ((bill * 100 * (100 + (tipPercentage))) / (numOfPeople * 10000)).toFixed(2) : '0'}</p>
-                    <p>Tip per Person</p>
-                    <p className="calculation">{currency}{numOfPeople > 0 ? (((bill * tipPercentage) * 100) / (numOfPeople * 10000)).toFixed(2) : '0'}</p>
+                    <p>Total Per Person</p>
+                    <p className="calculation">{currency} {((parseFloat(bill) + parseFloat(tip))/numOfPeople).toFixed(2)}</p>
+                    {tipPercentage >0 ?<p>Bill/Tip Total</p> : <p>Bill Total</p>}
+                    {tipPercentage >0 ?<p className="calculation">{currency} {(parseFloat(bill) + parseFloat(tip)).toFixed(2)} / {currency} {tip}</p>
+                        : <p className="calculation">{currency} {(parseFloat(bill) + parseFloat(tip)).toFixed(2)}</p>}
+                    {tipPercentage >0 ?<p>Bill/Tip Per Person</p> : null}
+                    {tipPercentage >0 ?<p className="calculation">{currency} {((bill * 10000) / (numOfPeople * 10000)).toFixed(2)} /
+                        {currency} {((tip * 10000) / (numOfPeople * 10000)).toFixed(2)}</p> : null}
+
+
+
                     <button className="reset" onClick={() => reset()}>Reset</button>
                 </div>
             </div>
