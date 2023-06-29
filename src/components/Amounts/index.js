@@ -61,6 +61,38 @@ const BillSplitter = () => {
         }
     }
 
+    const roundUpTotal = () => {
+        const total = (parseFloat(bill) + parseFloat(tip)).toFixed(2)
+        if (total % 1 === 0) {
+            let value = (Math.ceil(total/10))*10
+            if (value-total > 5) {
+                setTip(((value - total - 5) + parseFloat(tip)).toFixed(2))
+            } else {
+                setTip(((value - total) + parseFloat(tip)).toFixed(2))
+            }
+        }
+        if (total % 1 !== 0) {
+            let value = Math.ceil(total)
+            setTip(((value-total) + parseFloat(tip)).toFixed(2))
+        }
+    }
+
+    const roundUpTip = () => {
+        const total = parseFloat(tip).toFixed(2)
+        if (total % 1 === 0) {
+            let value = (Math.ceil(total/10))*10
+            if (value - total > 5) {
+                setTip((value - 5).toFixed(2))
+            } else {
+                setTip(value.toFixed(2))
+            }
+        }
+        if (total % 1 !== 0) {
+            let value = Math.ceil(total)
+            setTip(value.toFixed(2))
+        }
+    }
+
     if (view === 'enterValues') {
         return (
             <>
@@ -132,9 +164,12 @@ const BillSplitter = () => {
                     {tipPercentage >0 ?<p>Bill/Tip Per Person</p> : null}
                     {tipPercentage >0 ?<p className="calculation">{currency} {((bill * 10000) / (numOfPeople * 10000)).toFixed(2)} /
                         {currency} {((tip * 10000) / (numOfPeople * 10000)).toFixed(2)}</p> : null}
-
-
-
+                </div>
+                    <div className="bottomButtons">
+                    <button className="roundUpLarge" onClick={() => roundUpTotal()}>Round Up Total</button>
+                    <button className="roundUpLarge" onClick={() => roundUpTip()}>Round Up Tip</button>
+                        <button className="roundUpLarge" onClick={() => calculateTip()}>Reset Round Up</button>
+                    <button className="goBack" onClick={() => setView('enterValues')}>Go Back</button>
                     <button className="reset" onClick={() => reset()}>Reset</button>
                 </div>
             </div>

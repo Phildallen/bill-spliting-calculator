@@ -129,21 +129,25 @@ input{
     gap: 3vh;
 }
 
-.calculate, .inactiveCalc, .reset {
+.calculate, .inactiveCalc, .reset, .goBack, .roundUpLarge{
     border-style: solid;
     border-width: medium;
     border-color: #ffffff;
     border-radius: 1vh;
 }
 
-.calculate, .inactiveCalc {
+.calculate, .inactiveCalc, .goBack, .roundUpLarge {
     height: 5vh;
-    width: 40vw;
+    width: 60vw;
     font-size: 4vh;
     align-self: center;
 }
 
-.calculate {
+.roundUpLarge {
+    font-size: 3vh;
+}
+
+.calculate, .goBack, .roundUpLarge {
     background-color: #ffffff;
     color: #00004b;
 }
