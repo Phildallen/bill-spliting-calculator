@@ -3,7 +3,7 @@ import {NumericFormat} from 'react-number-format'
 
 const BillSplitter = () => {
     const [bill, setBill] = useState(null)
-    const [tip, setTip] = useState(0)
+    const [tip, setTip] = useState({"baseTip":0, "currentTip":0, "adjTip1":0, "adjTip2":0, "adjTip3":0})
     const [tipPercentage, setTipPercentage] = useState(0)
     const [numOfPeople, setNumOfPeople] = useState(2)
     const [currency, setCurrency] = useState("£")
@@ -13,7 +13,7 @@ const BillSplitter = () => {
 
     function reset() {
         setBill(null)
-        setTip(0)
+        setTip({"baseTip":0, "currentTip":0, "adjTip1":0, "adjTip2":0, "adjTip3":0})
         setTipPercentage(0)
         setNumOfPeople(2)
         setView('enterValues')
@@ -44,8 +44,11 @@ const BillSplitter = () => {
 
     const calculateTip = () => {
         const value = (bill * 100 * tipPercentage) / 10000
-        setTip(value.toFixed(2))
-    }
+        const updatedTip = [...tip]
+        updatedTip.baseTip = value.toFixed(2)
+        updatedTip.currentTip = value.toFixed(2)
+        setTip(updatedTip)
+    };
 
     const handleTipDeduction = (e) => {
         if (tipPercentage > 0) {
@@ -66,67 +69,82 @@ const BillSplitter = () => {
     }
 
     const roundUpTotal = () => {
+        let adjTipUpdate = "adjTip" + (roundTotalCount + roundTipCount +1)
+        console.log(adjTipUpdate)
         if (roundTotalCount + roundTipCount < 3) {
-            const total = (parseFloat(bill) + parseFloat(tip)).toFixed(2)
+            const total = (parseFloat(bill) + parseFloat(tip.currentTip)).toFixed(2)
             if (total % 10 === 0) {
-                let value = parseFloat(tip) + 10
-                setTip(parseFloat(value).toFixed(2))
+                let value = parseFloat(tip.currentTip) + 10
+                const updatedTip = [...tip]
+                updatedTip[adjTipUpdate] = parseFloat(value).toFixed(2)
+                updatedTip.currentTip = parseFloat(value).toFixed(2)
+                setTip(updatedTip)
                 setRoundTotalCount(roundTotalCount + 1)
                 return
             }
             if (total % 1 === 0) {
                 let value = (Math.ceil(total / 10)) * 10
                 if (value - total > 5) {
-                    setTip(((value - total - 5) + parseFloat(tip)).toFixed(2))
+                    const updatedTip = [...tip]
+                    updatedTip[adjTipUpdate] = ((value - total - 5) + parseFloat(tip.currentTip)).toFixed(2)
+                    updatedTip.currentTip = ((value - total - 5) + parseFloat(tip.currentTip)).toFixed(2)
+                    setTip(updatedTip)
                     setRoundTotalCount(roundTotalCount + 1)
                     return;
                 } else {
-                    setTip(((value - total) + parseFloat(tip)).toFixed(2))
+                    const updatedTip = [...tip]
+                    updatedTip[adjTipUpdate] = ((value - total) + parseFloat(tip.currentTip)).toFixed(2)
+                    updatedTip.currentTip = ((value - total) + parseFloat(tip.currentTip)).toFixed(2)
+                    setTip(updatedTip)
                     setRoundTotalCount(roundTotalCount + 1)
                     return;
                 }
             }
             if (total % 1 !== 0) {
                 let value = Math.ceil(total)
-                setTip(((value - total) + parseFloat(tip)).toFixed(2))
+                const updatedTip = [...tip]
+                updatedTip[adjTipUpdate] = ((value - total) + parseFloat(tip.currentTip)).toFixed(2)
+                updatedTip.currentTip = ((value - total) + parseFloat(tip.currentTip)).toFixed(2)
+                setTip(updatedTip)
                 setRoundTotalCount(roundTotalCount + 1)
             }
         }
     }
 
-    const roundUpTip = () => {
-        if (roundTotalCount + roundTipCount < 3) {
-            const total = parseFloat(tip).toFixed(2)
-            if (total % 1 === 0) {
-                let value = (Math.ceil(total / 10)) * 10
-                if (value - total > 5) {
-                    setTip((value - 5).toFixed(2))
-                    setRoundTipCount(roundTipCount + 1)
-                } else {
-                    setTip(value.toFixed(2))
-                    setRoundTipCount(roundTipCount + 1)
-                }
-            }
-            if (total % 1 !== 0) {
-                let value = Math.ceil(total)
-                setTip(value.toFixed(2))
-                setRoundTipCount(roundTipCount + 1)
-            }
-        }
-    }
+    // const roundUpTip = () => {
+    //     if (roundTotalCount + roundTipCount < 3) {
+    //         const total = parseFloat(tip).toFixed(2)
+    //         if (total % 1 === 0) {
+    //             let value = (Math.ceil(total / 10)) * 10
+    //             if (value - total > 5) {
+    //                 setTip((value - 5).toFixed(2))
+    //                 setRoundTipCount(roundTipCount + 1)
+    //             } else {
+    //                 setTip(value.toFixed(2))
+    //                 setRoundTipCount(roundTipCount + 1)
+    //             }
+    //         }
+    //         if (total % 1 !== 0) {
+    //             let value = Math.ceil(total)
+    //             setTip(value.toFixed(2))
+    //             setRoundTipCount(roundTipCount + 1)
+    //         }
+    //     }
+    // }
 
-    const undoRoundUpTotal = () => {
-        let count = roundTotalCount
-        setRoundTotalCount(0)
-        calculateTip()
-        if (roundTotalCount === 3) {
-            setRoundTotalCount(2)
-            // count = 2
-        }
-        if (count === 2) {
-            setRoundTotalCount(1)
-        }
-    }
+    // const undoRoundUpTotal = () => {
+    //     let count = roundTotalCount
+    //     setRoundTotalCount(0)
+    //     calculateTip()
+    //     if (roundTotalCount === 3) {
+    //         roundUpTotal
+    //             .then(roundUpTotal)
+    //         // count = 2
+    //     }
+    //     if (count === 2) {
+    //         roundUpTotal()
+    //     }
+    // }
 
     if (view === 'enterValues') {
         return (
@@ -211,16 +229,16 @@ const BillSplitter = () => {
                 <div className="content">
                     <div>
                         <p>Total Per Person</p>
-                        <p className="calculation">{currency} {((parseFloat(bill) + parseFloat(tip)) / numOfPeople).toFixed(2)}</p>
-                        {tip > 0 ? <p>Bill/Tip Total</p> : <p>Bill Total</p>}
-                        {tip > 0 ?
-                            <p className="calculation">{currency} {(parseFloat(bill) + parseFloat(tip)).toFixed(2)} / {currency} {tip}</p>
+                        <p className="calculation">{currency} {((parseFloat(bill) + parseFloat(tip.currentTip)) / numOfPeople).toFixed(2)}</p>
+                        {tip.currentTip > 0 ? <p>Bill/Tip Total</p> : <p>Bill Total</p>}
+                        {tip.currentTip > 0 ?
+                            <p className="calculation">{currency} {(parseFloat(bill) + parseFloat(tip.currentTip)).toFixed(2)} / {currency} {tip.currentTip}</p>
                             :
-                            <p className="calculation">{currency} {(parseFloat(bill) + parseFloat(tip)).toFixed(2)}</p>}
-                        {tip > 0 ? <p>Bill/Tip Per Person</p> : null}
-                        {tip > 0 ?
+                            <p className="calculation">{currency} {(parseFloat(bill) + parseFloat(tip.currentTip)).toFixed(2)}</p>}
+                        {tip.currentTip > 0 ? <p>Bill/Tip Per Person</p> : null}
+                        {tip.currentTip > 0 ?
                             <p className="calculation">{currency} {((bill * 10000) / (numOfPeople * 10000)).toFixed(2)} /
-                                {currency} {((tip * 10000) / (numOfPeople * 10000)).toFixed(2)}</p> : null}
+                                {currency} {((tip.currentTip * 10000) / (numOfPeople * 10000)).toFixed(2)}</p> : null}
                     </div>
                     <div className="bottomButtons">
                         <p>{roundTotalCount}</p>
@@ -228,14 +246,14 @@ const BillSplitter = () => {
                             className={roundTotalCount + roundTipCount < 3 && roundTotalCount < 3 ? "roundUpLarge" : "roundUpLarge inactiveLargeButton"}
                             onClick={() => roundUpTotal()}>Round Up Total
                         </button>
-                        <button className={roundTotalCount > 0 ? "roundUpLarge" : "roundUpLarge inactiveLargeButton"}
-                                onClick={() => undoRoundUpTotal()}>Undo Rnd Up Total
-                        </button>
+                        {/*<button className={roundTotalCount > 0 ? "roundUpLarge" : "roundUpLarge inactiveLargeButton"}*/}
+                        {/*        onClick={() => undoRoundUpTotal()}>Undo Rnd Up Total*/}
+                        {/*</button>*/}
 
-                        <button
-                            className={roundTotalCount + roundTipCount < 3 && roundTipCount < 2 ? "roundUpLarge" : "roundUpLarge inactiveLargeButton"}
-                            onClick={() => roundUpTip()}>Round Up Tip
-                        </button>
+                        {/*<button*/}
+                        {/*    className={roundTotalCount + roundTipCount < 3 && roundTipCount < 2 ? "roundUpLarge" : "roundUpLarge inactiveLargeButton"}*/}
+                        {/*    onClick={() => roundUpTip()}>Round Up Tip*/}
+                        {/*</button>*/}
                         <button
                             className={roundTotalCount + roundTipCount > 0 ? "roundUpLarge" : "roundUpLarge inactiveLargeButton"}
                             onClick={() => {
