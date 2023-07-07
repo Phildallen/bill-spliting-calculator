@@ -68,86 +68,42 @@ const BillSplitter = () => {
         }
     }
 
-    const roundUpTotal = () => {
-        let adjTipUpdate = "adjTip" + (roundTotalCount + roundTipCount +1)
-        if (roundTotalCount + roundTipCount < 3) {
-            const total = (parseFloat(bill) + parseFloat(tip.currentTip)).toFixed(2)
-            console.log(total)
-            if (total % 10 === 0) {
-                let value = parseFloat(tip.currentTip) + 10
-                const updatedTip = {...tip}
-                updatedTip[adjTipUpdate] = parseFloat(value).toFixed(2)
-                updatedTip.currentTip = parseFloat(value).toFixed(2)
-                setTip(updatedTip)
-                setRoundTotalCount(roundTotalCount + 1)
-                return
+    const roundUpCalc = (total) => {
+        if (total % 10 === 0) {
+            return parseFloat(tip.currentTip) + 5;
+        }
+        if (total % 1 === 0) {
+            let tipIncrease = (Math.ceil(total / 10)) * 10
+            if (tipIncrease - total > 5) {
+                console.log("over5")
+               return ((tipIncrease - total - 5) + parseFloat(tip.currentTip)).toFixed(2);
+            } else {
+                return ((tipIncrease - total) + parseFloat(tip.currentTip)).toFixed(2);
             }
-            if (total % 1 === 0) {
-                let value = (Math.ceil(total / 10)) * 10
-                if (value - total > 5) {
-                    console.log("over5")
-                    const updatedTip = {...tip}
-                    updatedTip[adjTipUpdate] = ((value - total - 5) + parseFloat(tip.currentTip)).toFixed(2)
-                    updatedTip.currentTip = ((value - total - 5) + parseFloat(tip.currentTip)).toFixed(2)
-                    setTip(updatedTip)
-                    setRoundTotalCount(roundTotalCount + 1)
-                    return;
-                } else {
-                    console.log("under5")
-                    const updatedTip = {...tip}
-                    updatedTip[adjTipUpdate] = ((value - total) + parseFloat(tip.currentTip)).toFixed(2)
-                    updatedTip.currentTip = ((value - total) + parseFloat(tip.currentTip)).toFixed(2)
-                    setTip(updatedTip)
-                    setRoundTotalCount(roundTotalCount + 1)
-                    return;
-                }
-            }
-            if (total % 1 !== 0) {
-                let value = Math.ceil(total)
-                console.log("not whole number")
-                const updatedTip = {...tip}
-                updatedTip[adjTipUpdate] = ((value - total) + parseFloat(tip.currentTip)).toFixed(2)
-                updatedTip.currentTip = ((value - total) + parseFloat(tip.currentTip)).toFixed(2)
-                setTip(updatedTip)
-                setRoundTotalCount(roundTotalCount + 1)
-            }
+        }
+        if (total % 1 !== 0) {
+            return ((Math.ceil(total) - total) + parseFloat(tip.currentTip)).toFixed(2);
         }
     }
 
-    // const roundUpTip = () => {
-    //     if (roundTotalCount + roundTipCount < 3) {
-    //         const total = parseFloat(tip).toFixed(2)
-    //         if (total % 1 === 0) {
-    //             let value = (Math.ceil(total / 10)) * 10
-    //             if (value - total > 5) {
-    //                 setTip((value - 5).toFixed(2))
-    //                 setRoundTipCount(roundTipCount + 1)
-    //             } else {
-    //                 setTip(value.toFixed(2))
-    //                 setRoundTipCount(roundTipCount + 1)
-    //             }
-    //         }
-    //         if (total % 1 !== 0) {
-    //             let value = Math.ceil(total)
-    //             setTip(value.toFixed(2))
-    //             setRoundTipCount(roundTipCount + 1)
-    //         }
-    //     }
-    // }
-
-    // const undoRoundUpTotal = () => {
-    //     let count = roundTotalCount
-    //     setRoundTotalCount(0)
-    //     calculateTip()
-    //     if (roundTotalCount === 3) {
-    //         roundUpTotal
-    //             .then(roundUpTotal)
-    //         // count = 2
-    //     }
-    //     if (count === 2) {
-    //         roundUpTotal()
-    //     }
-    // }
+    const roundUp = (totalOrTip) => {
+        let adjTipUpdate = "adjTip" + (roundTotalCount + roundTipCount +1)
+        let total = 0
+        if (roundTotalCount + roundTipCount < 3) {
+            if (totalOrTip === "total") {
+                total = (parseFloat(bill) + parseFloat(tip.currentTip)).toFixed(2)
+            }
+            if (totalOrTip === "tip") {
+                total = parseFloat(tip.currentTip).toFixed(2)
+            }
+            let value = roundUpCalc(total)
+            const updatedTip = {...tip}
+            updatedTip[adjTipUpdate] = parseFloat(value).toFixed(2)
+            updatedTip.currentTip = parseFloat(value).toFixed(2)
+            setTip(updatedTip)
+            setRoundTotalCount(roundTotalCount + 1)
+        }
+    }
 
     if (view === 'enterValues') {
         return (
@@ -158,9 +114,9 @@ const BillSplitter = () => {
                     <div className="billTotal">
                         <p>Bill Total</p>
                         <div className="bill">
-                            <select onChange={e => setCurrency(e.target.value)} name="currency"
+                            <select defaultValue="" onChange={e => setCurrency(e.target.value)} name="currency"
                                     className={currency === 'CHF' ? "currency chf" : "currency"}>
-                                <option value="" selected disabled hidden>{currency}</option>
+                                <option value="" disabled hidden>{currency}</option>
                                 <option value="£">£</option>
                                 <option value="€">€</option>
                                 <option value="$">$</option>
@@ -247,16 +203,16 @@ const BillSplitter = () => {
                         <p>{roundTotalCount}</p>
                         <button
                             className={roundTotalCount + roundTipCount < 3 && roundTotalCount < 3 ? "roundUpLarge" : "roundUpLarge inactiveLargeButton"}
-                            onClick={() => roundUpTotal()}>Round Up Total
+                            onClick={() => roundUp("total")}>Round Up Total
                         </button>
                         {/*<button className={roundTotalCount > 0 ? "roundUpLarge" : "roundUpLarge inactiveLargeButton"}*/}
                         {/*        onClick={() => undoRoundUpTotal()}>Undo Rnd Up Total*/}
                         {/*</button>*/}
 
-                        {/*<button*/}
-                        {/*    className={roundTotalCount + roundTipCount < 3 && roundTipCount < 2 ? "roundUpLarge" : "roundUpLarge inactiveLargeButton"}*/}
-                        {/*    onClick={() => roundUpTip()}>Round Up Tip*/}
-                        {/*</button>*/}
+                        <button
+                            className={roundTotalCount + roundTipCount < 3 && roundTipCount < 2 ? "roundUpLarge" : "roundUpLarge inactiveLargeButton"}
+                            onClick={() => roundUp("tip")}>Round Up Tip
+                        </button>
                         <button
                             className={roundTotalCount + roundTipCount > 0 ? "roundUpLarge" : "roundUpLarge inactiveLargeButton"}
                             onClick={() => {
