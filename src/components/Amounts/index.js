@@ -44,7 +44,7 @@ const BillSplitter = () => {
 
     const calculateTip = () => {
         const value = (bill * 100 * tipPercentage) / 10000
-        const updatedTip = [...tip]
+        const updatedTip = {...tip}
         updatedTip.baseTip = value.toFixed(2)
         updatedTip.currentTip = value.toFixed(2)
         setTip(updatedTip)
@@ -70,12 +70,12 @@ const BillSplitter = () => {
 
     const roundUpTotal = () => {
         let adjTipUpdate = "adjTip" + (roundTotalCount + roundTipCount +1)
-        console.log(adjTipUpdate)
         if (roundTotalCount + roundTipCount < 3) {
             const total = (parseFloat(bill) + parseFloat(tip.currentTip)).toFixed(2)
+            console.log(total)
             if (total % 10 === 0) {
                 let value = parseFloat(tip.currentTip) + 10
-                const updatedTip = [...tip]
+                const updatedTip = {...tip}
                 updatedTip[adjTipUpdate] = parseFloat(value).toFixed(2)
                 updatedTip.currentTip = parseFloat(value).toFixed(2)
                 setTip(updatedTip)
@@ -85,14 +85,16 @@ const BillSplitter = () => {
             if (total % 1 === 0) {
                 let value = (Math.ceil(total / 10)) * 10
                 if (value - total > 5) {
-                    const updatedTip = [...tip]
+                    console.log("over5")
+                    const updatedTip = {...tip}
                     updatedTip[adjTipUpdate] = ((value - total - 5) + parseFloat(tip.currentTip)).toFixed(2)
                     updatedTip.currentTip = ((value - total - 5) + parseFloat(tip.currentTip)).toFixed(2)
                     setTip(updatedTip)
                     setRoundTotalCount(roundTotalCount + 1)
                     return;
                 } else {
-                    const updatedTip = [...tip]
+                    console.log("under5")
+                    const updatedTip = {...tip}
                     updatedTip[adjTipUpdate] = ((value - total) + parseFloat(tip.currentTip)).toFixed(2)
                     updatedTip.currentTip = ((value - total) + parseFloat(tip.currentTip)).toFixed(2)
                     setTip(updatedTip)
@@ -102,7 +104,8 @@ const BillSplitter = () => {
             }
             if (total % 1 !== 0) {
                 let value = Math.ceil(total)
-                const updatedTip = [...tip]
+                console.log("not whole number")
+                const updatedTip = {...tip}
                 updatedTip[adjTipUpdate] = ((value - total) + parseFloat(tip.currentTip)).toFixed(2)
                 updatedTip.currentTip = ((value - total) + parseFloat(tip.currentTip)).toFixed(2)
                 setTip(updatedTip)
