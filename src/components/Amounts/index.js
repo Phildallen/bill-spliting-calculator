@@ -3,7 +3,7 @@ import {NumericFormat} from 'react-number-format'
 
 const BillSplitter = () => {
     const [bill, setBill] = useState(null)
-    const [tip, setTip] = useState({"baseTip":0, "currentTip":0, "adjTip1":0, "adjTip2":0, "adjTip3":0})
+    const [tip, setTip] = useState({"baseTip": 0, "currentTip": 0, "adjTip1": 0, "adjTip2": 0, "adjTip3": 0})
     const [tipPercentage, setTipPercentage] = useState(0)
     const [numOfPeople, setNumOfPeople] = useState(2)
     const [currency, setCurrency] = useState("£")
@@ -12,7 +12,7 @@ const BillSplitter = () => {
 
     function reset() {
         setBill(null)
-        setTip({"baseTip":0, "currentTip":0, "adjTip1":0, "adjTip2":0, "adjTip3":0})
+        setTip({"baseTip": 0, "currentTip": 0, "adjTip1": 0, "adjTip2": 0, "adjTip3": 0})
         setTipPercentage(0)
         setNumOfPeople(2)
         setView('enterValues')
@@ -73,8 +73,7 @@ const BillSplitter = () => {
         if (total % 1 === 0) {
             let tipIncrease = (Math.ceil(total / 10)) * 10
             if (tipIncrease - total > 5) {
-                console.log("over5")
-               return ((tipIncrease - total - 5) + parseFloat(tip.currentTip)).toFixed(2);
+                return ((tipIncrease - total - 5) + parseFloat(tip.currentTip)).toFixed(2);
             } else {
                 return ((tipIncrease - total) + parseFloat(tip.currentTip)).toFixed(2);
             }
@@ -114,11 +113,20 @@ const BillSplitter = () => {
         if (roundCount > 1) {
             adjTipUpdate = "adjTip" + (roundCount - 1)
         }
-            const updatedTip = {...tip}
-            updatedTip.currentTip = tip[adjTipUpdate]
-            setTip(updatedTip)
-            setRoundCount(roundCount - 1)
+        const updatedTip = {...tip}
+        updatedTip.currentTip = tip[adjTipUpdate]
+        setTip(updatedTip)
+        setRoundCount(roundCount - 1)
 
+    }
+
+    const resetRoundUp = () => {
+        if (roundCount > 1) {
+            const updatedTip = {...tip}
+            updatedTip.currentTip = tip.baseTip
+            setTip(updatedTip)
+            setRoundCount(0)
+        }
     }
 
     if (view === 'enterValues') {
@@ -216,7 +224,6 @@ const BillSplitter = () => {
                                 {currency} {((tip.currentTip * 10000) / (numOfPeople * 10000)).toFixed(2)}</p> : null}
                     </div>
                     <div className="bottomButtons">
-                        <p>{roundCount}</p>
                         <button
                             className={roundCount < 3 ? "roundUpLarge" : "roundUpLarge inactiveLargeButton"}
                             onClick={() => roundUp("total")}>Round Up Total
@@ -229,11 +236,8 @@ const BillSplitter = () => {
                                 onClick={() => undoRoundUp()}>Undo Round Up
                         </button>
                         <button
-                            className={roundCount  > 0 ? "roundUpLarge" : "roundUpLarge inactiveLargeButton"}
-                            onClick={() => {
-                                calculateTip()
-                                setRoundCount(0)
-                            }}>Reset Round Up
+                            className={roundCount > 1 ? "roundUpLarge" : "roundUpLarge inactiveLargeButton"}
+                            onClick={() => resetRoundUp()}>Reset Round Up
                         </button>
                         <button className="goBack" onClick={() => setView('enterValues')}>Go Back</button>
                         <button className="reset" onClick={() => reset()}>Reset</button>
