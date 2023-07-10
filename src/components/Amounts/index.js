@@ -8,8 +8,7 @@ const BillSplitter = () => {
     const [numOfPeople, setNumOfPeople] = useState(2)
     const [currency, setCurrency] = useState("£")
     const [view, setView] = useState('enterValues')
-    const [roundTotalCount, setRoundTotalCount] = useState(0)
-    const [roundTipCount, setRoundTipCount] = useState(0)
+    const [roundCount, setRoundCount] = useState(0)
 
     function reset() {
         setBill(null)
@@ -22,8 +21,7 @@ const BillSplitter = () => {
     const calculate = () => {
         if (bill > 0) {
             setView('showCalculation')
-            setRoundTotalCount(0)
-            setRoundTipCount(0)
+            setRoundCount(0)
         }
     }
 
@@ -87,9 +85,9 @@ const BillSplitter = () => {
     }
 
     const roundUp = (totalOrTip) => {
-        let adjTipUpdate = "adjTip" + (roundTotalCount + roundTipCount +1)
+        let adjTipUpdate = "adjTip" + (roundCount + 1)
         let total = 0
-        if (roundTotalCount + roundTipCount < 3) {
+        if (roundCount < 3) {
             if (totalOrTip === "total") {
                 total = (parseFloat(bill) + parseFloat(tip.currentTip)).toFixed(2)
             }
@@ -101,8 +99,26 @@ const BillSplitter = () => {
             updatedTip[adjTipUpdate] = parseFloat(value).toFixed(2)
             updatedTip.currentTip = parseFloat(value).toFixed(2)
             setTip(updatedTip)
-            setRoundTotalCount(roundTotalCount + 1)
+            setRoundCount(roundCount + 1)
         }
+    }
+
+    const undoRoundUp = () => {
+        let adjTipUpdate = ""
+        if (roundCount < 1) {
+            return
+        }
+        if (roundCount === 1) {
+            adjTipUpdate = "baseTip"
+        }
+        if (roundCount > 1) {
+            adjTipUpdate = "adjTip" + (roundCount - 1)
+        }
+            const updatedTip = {...tip}
+            updatedTip.currentTip = tip[adjTipUpdate]
+            setTip(updatedTip)
+            setRoundCount(roundCount - 1)
+
     }
 
     if (view === 'enterValues') {
@@ -200,25 +216,23 @@ const BillSplitter = () => {
                                 {currency} {((tip.currentTip * 10000) / (numOfPeople * 10000)).toFixed(2)}</p> : null}
                     </div>
                     <div className="bottomButtons">
-                        <p>{roundTotalCount}</p>
+                        <p>{roundCount}</p>
                         <button
-                            className={roundTotalCount + roundTipCount < 3 && roundTotalCount < 3 ? "roundUpLarge" : "roundUpLarge inactiveLargeButton"}
+                            className={roundCount < 3 ? "roundUpLarge" : "roundUpLarge inactiveLargeButton"}
                             onClick={() => roundUp("total")}>Round Up Total
                         </button>
-                        {/*<button className={roundTotalCount > 0 ? "roundUpLarge" : "roundUpLarge inactiveLargeButton"}*/}
-                        {/*        onClick={() => undoRoundUpTotal()}>Undo Rnd Up Total*/}
-                        {/*</button>*/}
-
                         <button
-                            className={roundTotalCount + roundTipCount < 3 && roundTipCount < 2 ? "roundUpLarge" : "roundUpLarge inactiveLargeButton"}
+                            className={roundCount < 3 ? "roundUpLarge" : "roundUpLarge inactiveLargeButton"}
                             onClick={() => roundUp("tip")}>Round Up Tip
                         </button>
+                        <button className={roundCount > 0 ? "roundUpLarge" : "roundUpLarge inactiveLargeButton"}
+                                onClick={() => undoRoundUp()}>Undo Round Up
+                        </button>
                         <button
-                            className={roundTotalCount + roundTipCount > 0 ? "roundUpLarge" : "roundUpLarge inactiveLargeButton"}
+                            className={roundCount  > 0 ? "roundUpLarge" : "roundUpLarge inactiveLargeButton"}
                             onClick={() => {
-                                calculateTip();
-                                setRoundTotalCount(0);
-                                setRoundTipCount(0)
+                                calculateTip()
+                                setRoundCount(0)
                             }}>Reset Round Up
                         </button>
                         <button className="goBack" onClick={() => setView('enterValues')}>Go Back</button>
