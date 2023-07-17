@@ -138,6 +138,7 @@ const BillSplitter = () => {
                     <div className="billTotal">
                         <p>Bill Total</p>
                         <div className="bill">
+                            <div className="currencyBox">
                             <select defaultValue="" onChange={e => setCurrency(e.target.value)} name="currency"
                                     className={currency === 'CHF' ? "currency chf" : "currency"}>
                                 <option value="" disabled hidden>{currency}</option>
@@ -149,8 +150,9 @@ const BillSplitter = () => {
                                 <option value="kr.">kr.</option>
                                 <option value="zł.">zł.</option>
                             </select>
-                            <p onChange={handleBillChange}>
-                                <NumericFormat value={bill} decimalScale={2} fixedDecimalScale allowNegative={false}/>
+                        </div>
+                            <p className="billAmount" onChange={handleBillChange}>
+                                <NumericFormat className="numericFormat" pattern="[0-9]*" inputMode="decimal" value={bill} decimalScale={2} fixedDecimalScale allowNegative={false}/>
                             </p>
                         </div>
                     </div>

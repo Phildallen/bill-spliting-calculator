@@ -12,6 +12,10 @@ body {
     font-size: 3vh;
 }
 
+select {
+    appearance: none;
+}
+
 .content {
     display: flex;
     flex-direction: column;
@@ -30,23 +34,35 @@ body {
 .bill {
     display: flex;
     gap: 2vw;
-}
+    }
 
-input, .currency {
+.currencyBox {
     border-style: solid;
     border-radius: 2vh;
-    max-height: 6vh;
+    width: 7vh;
+    height: 7vh;
     background-color: #00004b;
     color: #ffffff;
     font-weight: 400;
     font-size: 4vh;
     align-self: center;
     text-align: center;
+    display: flex;
 }
 
-.currency {
-    max-width: 15vw;
-    padding-bottom: 1vh;
+input, .currency {
+    border: none;
+    border-radius: 2vh;
+    max-height: 6vh;
+    background-color: transparent;
+    color: #ffffff;
+    font-weight: 400;
+    font-size: 4vh;
+    height: 6.8vh;
+    width: 6.8vh;
+    align-self: center;
+    text-align: center;
+    outline:none
 }
 
 .chf {
@@ -55,16 +71,26 @@ input, .currency {
     padding-top: 1vh;
 }
 
-input{
+.billAmount {
     border-style: solid;
     border-radius: 2vh;
-    max-width: 45vw;
+    width: 45vw;
+    height: 7vh;
     background-color: #00004b;
     color: #ffffff;
     font-weight: 400;
-    font-size: 4vh;
+    font-size: 5vh;
     align-self: center;
     text-align: center;
+    display: flex;
+}
+
+.numericFormat {
+    justify-content: center;
+    width: 40vw;
+    border: none;
+    background-color: transparent;
+    outline:none
 }
 
 .tipButton, .tipSelected {
@@ -114,6 +140,7 @@ input{
 .plusMinusButton {
     font-size: 3vh;
     width: 5vh;
+    padding: 0;
 }
 
 .displayNumber {
@@ -170,6 +197,11 @@ input{
 
 .calculation {
     font-size: 4vh;
+}
+
+::selection {
+    background: red;
+    border-color: red;
 }
 
 @media screen  and (min-width: 1000px) {
