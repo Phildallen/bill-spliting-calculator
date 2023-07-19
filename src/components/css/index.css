@@ -23,19 +23,29 @@ select {
     flex-wrap: wrap;
     justify-content: space-around;
     text-align: center;
-    align-content: space-around;
+    align-content: center;
     height: auto;
+    /*gap: 2vh;*/
 }
 
-.billTotal {
+.item {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    line-height: 1px;
 }
+
 .bill {
     display: flex;
     gap: 2vw;
     }
+
+.flexboxHeadingHalf {
+    margin-bottom: -0.5vh;
+}
+
+.flexboxHeading2 {
+    margin-bottom: -2vh;
+}
 
 .currencyBox {
     border-style: solid;

@@ -133,61 +133,63 @@ const BillSplitter = () => {
         return (
             <>
                 <div className="content">
-                    <p>Bill Splitter</p>
-
-                    <div className="billTotal">
-                        <p>Bill Total</p>
+                    <h2>Bill Splitter</h2>
+                    <div className="item">
+                        <p className="flexboxHeading2">Bill Total</p>
                         <div className="bill">
+
                             <div className="currencyBox">
-                            <select defaultValue="" onChange={e => setCurrency(e.target.value)} name="currency"
-                                    className={currency === 'CHF' ? "currency chf" : "currency"}>
-                                <option value="" disabled hidden>{currency}</option>
-                                <option value="£">£</option>
-                                <option value="€">€</option>
-                                <option value="$">$</option>
-                                <option value="CHF">CHF</option>
-                                <option value="Kč ">Kč</option>
-                                <option value="kr.">kr.</option>
-                                <option value="zł.">zł.</option>
-                            </select>
-                        </div>
+                                <select defaultValue="" onChange={e => setCurrency(e.target.value)} name="currency"
+                                        className={currency === 'CHF' ? "currency chf" : "currency"}>
+                                    <option value="" disabled hidden>{currency}</option>
+                                    <option value="£">£</option>
+                                    <option value="€">€</option>
+                                    <option value="$">$</option>
+                                    <option value="CHF">CHF</option>
+                                    <option value="Kč ">Kč</option>
+                                    <option value="kr.">kr.</option>
+                                    <option value="zł.">zł.</option>
+                                </select>
+                            </div>
                             <p className="billAmount" onChange={handleBillChange}>
-                                <NumericFormat className="numericFormat" pattern="[0-9]*" inputMode="decimal" value={bill} decimalScale={2} fixedDecimalScale allowNegative={false}/>
+                                <NumericFormat className="numericFormat" pattern="[0-9]*" inputMode="decimal"
+                                               value={bill} decimalScale={2} fixedDecimalScale allowNegative={false}/>
                             </p>
                         </div>
                     </div>
-                    <p>Tip</p>
-                    <div className="tipButtons">
-                        <button className={tipPercentage === 0 ? "tipSelected" : "tipButton"}
-                                onClick={() => setTipPercentage(0)}>0%
-                        </button>
-                        <button className={tipPercentage === 5 ? "tipSelected" : "tipButton"}
-                                onClick={() => setTipPercentage(5)}>5%
-                        </button>
-                        <button className={tipPercentage === 10 ? "tipSelected" : "tipButton"}
-                                onClick={() => setTipPercentage(10)}>10%
-                        </button>
+                    <div className="item">
+                        <p>Tip</p>
+                        <div className="tipButtons">
+                            <button className={tipPercentage === 0 ? "tipSelected" : "tipButton"}
+                                    onClick={() => setTipPercentage(0)}>0%
+                            </button>
+                            <button className={tipPercentage === 5 ? "tipSelected" : "tipButton"}
+                                    onClick={() => setTipPercentage(5)}>5%
+                            </button>
+                            <button className={tipPercentage === 10 ? "tipSelected" : "tipButton"}
+                                    onClick={() => setTipPercentage(10)}>10%
+                            </button>
+                        </div>
+                        <div className="tipButtons">
+                            <button className={tipPercentage === 15 ? "tipSelected" : "tipButton"}
+                                    onClick={() => setTipPercentage(15)}>15%
+                            </button>
+                            <button className={tipPercentage === 20 ? "tipSelected" : "tipButton"}
+                                    onClick={() => setTipPercentage(20)}>20%
+                            </button>
+                            <button className={tipPercentage === 25 ? "tipSelected" : "tipButton"}
+                                    onClick={() => setTipPercentage(25)}>25%
+                            </button>
+                        </div>
+                        <div className="adjNumber">
+                            <button className="plusMinusButton" onClick={handleTipDeduction}> -</button>
+                            <span className="displayNumber"><span>{tipPercentage}%</span></span>
+                            <button className="plusMinusButton" onClick={() => setTipPercentage(tipPercentage + 1)}> +
+                            </button>
+                        </div>
                     </div>
-                    <div className="tipButtons">
-                        <button className={tipPercentage === 15 ? "tipSelected" : "tipButton"}
-                                onClick={() => setTipPercentage(15)}>15%
-                        </button>
-                        <button className={tipPercentage === 20 ? "tipSelected" : "tipButton"}
-                                onClick={() => setTipPercentage(20)}>20%
-                        </button>
-                        <button className={tipPercentage === 25 ? "tipSelected" : "tipButton"}
-                                onClick={() => setTipPercentage(25)}>25%
-                        </button>
-                    </div>
-                    <div className="adjNumber">
-                        <button className="plusMinusButton" onClick={handleTipDeduction}> -</button>
-                        <span className="displayNumber"><span>{tipPercentage}%</span></span>
-                        <button className="plusMinusButton" onClick={() => setTipPercentage(tipPercentage + 1)}> +
-                        </button>
-                    </div>
-
-                    <div>
-                        <p>People</p>
+                    <div className="item">
+                        <p className="flexboxHeadingHalf">People</p>
                         <div className="adjNumber">
                             <button className="plusMinusButton" onClick={handlePeopleDeduction}> -</button>
                             <span className="displayNumber"><span>{numOfPeople}</span></span>
